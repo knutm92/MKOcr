@@ -23,19 +23,22 @@ class OCRGui(QWidget):
         self.input_browse = QPushButton('Browse')
         self.input_browse.clicked.connect(self.browse_input)
 
+        # Run OCR button
+        self.run_button = QPushButton('Run OCR!')
+        self.run_button.clicked.connect(self.run_ocr)
+
+        # Add created items to the gui box
         input_layout = QHBoxLayout()
         input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_path)
         input_layout.addWidget(self.input_browse)
+        input_layout.addWidget(self.run_button)
 
         self.setLayout(input_layout)
         print(self.input_label.isVisible())
         print(self.input_path.isVisible())
         print(self.input_browse.isVisible())
 
-        # Run OCR button
-        self.run_button = QPushButton('Run OCR!')
-        self.run_button.clicked.connect(self.run_ocr)
 
 
     def browse_input(self):
