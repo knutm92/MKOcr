@@ -35,20 +35,14 @@ class OCRGui(QWidget):
         input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_path)
         input_layout.addWidget(self.input_browse)
-        #spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        #input_layout.addItem(spacer)
+        # spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        # input_layout.addItem(spacer)
         main_layout.addLayout(input_layout)
 
         # Add run button below
         main_layout.addWidget(self.run_button)
 
-
         self.setLayout(main_layout)
-        print(self.input_label.isVisible())
-        print(self.input_path.isVisible())
-        print(self.input_browse.isVisible())
-
-
 
     def browse_input(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Select input pdf', '', 'pdf files (*.pdf);; All Files (*)')
