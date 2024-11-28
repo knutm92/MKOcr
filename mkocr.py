@@ -6,6 +6,7 @@ import cv2
 import pikepdf
 import io
 import const
+
 ##TODO: add error handling
 ##TODO: refactor into modules
 ##TODO: add preprocessing module
@@ -51,13 +52,6 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
         pdf_file.pages.extend(page.pages)
     print(f"trying to save {output_path}./output.pdf")
     pdf_file.save(output_path + '/output.pdf')  # Compact object stream
-
-    """page_pdfs.append(page_pdf)
-
-    # save searchable pdf to disk
-    with open(output_path+'/output.pdf', 'wb') as combined_pdf:
-        for page_pdf in page_pdfs:
-            combined_pdf.write(page_pdf)"""
 
 
 def main():
