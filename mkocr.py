@@ -18,6 +18,18 @@ pdf_name = 'synod_small'
 
 # initialize OCR engine
 
+def remove_noise(image):
+    denoised = cv2.medianBlur(image, const.noise_kernel)  # Adjust kernel size as needed
+    return denoised
+
+
+def apply_threshold(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    binary = cv2.adaptiveThreshold(
+        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, const.threshold_block, const.threshold_c)
+
+    return binary
+
 
 def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.pdf', language: str = 'eng',
            dpi: int = const.default_dpi, tesseract_path: str = const.default_tesseract_path):
@@ -38,6 +50,15 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
         image_path = f'{output_path}{pdf_name}_page_{page.number}.png'
         page_image.save(image_path)  # save img
         print(image_path)
+
+        # Save morphed image for comparison
+        image_path_hq = f'{output_path}{pdf_name}_page_{page.number}_hq.png'
+
+        # these are quality improvments:
+        page_image_hq = apply_threshold(cv2.imread(image_path))
+
+        cv2.imwrite(image_path_hq, page_image_hq)  # save img
+        print(image_path_hq)
 
         # Open the page image
         image = cv2.imread(image_path)
