@@ -16,7 +16,6 @@ class OCRGui(QWidget):
     def init_ui(self):
         self.setWindowTitle('MKOcr Pipeline')
         self.setGeometry(100, 100, 400, 300)
-        layout = QVBoxLayout()
 
         # Input for pdf path
         self.input_label = QLabel('Input pdf path:')
@@ -25,8 +24,19 @@ class OCRGui(QWidget):
         self.input_browse.clicked.connect(self.browse_input)
 
         input_layout = QHBoxLayout()
+        input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_path)
         input_layout.addWidget(self.input_browse)
+
+        self.setLayout(input_layout)
+        print(self.input_label.isVisible())
+        print(self.input_path.isVisible())
+        print(self.input_browse.isVisible())
+
+        # Run OCR button
+        self.run_button = QPushButton('Run OCR!')
+        self.run_button.clicked.connect(self.run_ocr)
+
 
     def browse_input(self):
         file_path, _ = QFileDialog.getOpenFileName(self, 'Select input pdf', '', 'pdf files (*.pdf);; All Files (*)')
