@@ -9,7 +9,6 @@ import const
 
 ##TODO: add error handling
 ##TODO: refactor into modules
-##TODO: add preprocessing module
 ##TODO: add some cool """ description
 
 
@@ -54,7 +53,7 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
         # Save morphed image for comparison
         image_path_hq = f'{output_path}{pdf_name}_page_{page.number}_hq.png'
 
-        # these are quality improvments:
+        # these are quality improvements:
         page_image_hq = apply_threshold(cv2.imread(image_path))
 
         cv2.imwrite(image_path_hq, page_image_hq)  # save img
