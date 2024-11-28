@@ -1,8 +1,11 @@
 import sys
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QMessageBox, \
-    QApplication
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QMessageBox, \
+    QApplication, QSpinBox, QSlider
+
+import const
 from mkocr import mk_ocr
 
 
@@ -27,21 +30,41 @@ class OCRGui(QWidget):
         self.input_browse = QPushButton('Browse')
         self.input_browse.clicked.connect(self.browse_input)
 
+        #DPI
+        self.dpi_label = QLabel('DPI:')
+        self.dpi_input = QSlider(Qt.Orientation.Horizontal)
+        self.dpi_input.setRange(72, 900)
+        self.dpi_input.setValue(const.default_dpi)
+        #self.dpi_value = QLabel(f'dpi value: {self.dpi_input.value()}')
+        #self.dpi_input.valueChanged.connect(self.dpi_value)
+
         # Run OCR button
         self.run_button = QPushButton('Run OCR!')
         self.run_button.clicked.connect(self.run_ocr)
 
+
         # Main Layout
         main_layout = QVBoxLayout()
 
-        # Add created items to the gui box
+        # Construct input layout
         input_layout = QHBoxLayout()
         input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_path)
         input_layout.addWidget(self.input_browse)
+
+        # Construct dpi layout
+        # TODO: add a slider tag with the selected value
+        # TODO: pass selected dpi value to the pipeline
+        dpi_layout = QHBoxLayout()
+        dpi_layout.addWidget(self.dpi_label)
+        dpi_layout.addWidget(self.dpi_input)
+        #dpi_layout.addWidget(self.dpi_value)
+
         # spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         # input_layout.addItem(spacer)
+        # Construct main layout
         main_layout.addLayout(input_layout)
+        main_layout.addLayout(dpi_layout)
 
         # Add run button below
         main_layout.addWidget(self.run_button)
