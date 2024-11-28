@@ -6,7 +6,7 @@ import cv2
 import pikepdf
 import io
 import const
-
+import PyQt6
 ##TODO: add error handling
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
