@@ -16,13 +16,14 @@ pdf_name = 'synod_small'
 tbd_page_image_path = './sample_data_output.synod_small_page_1_.png'
 default_dpi = 450
 
+
 # initialize OCR engine
 
 
 def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.pdf', language: str = 'eng',
-           dpi: int = default_dpi):
+           dpi: int = default_dpi, tesseract_path: str = r'C:\Program Files\Tesseract-OCR\tesseract.exe'):
     # Set Tesseract engine path
-    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
     # Open pdf
     pdf = pymupdf.open(input_path)
@@ -71,6 +72,8 @@ def main():
     parser.add_argument('--language', default='eng', help='Language of the text.')
     parser.add_argument('--dpi', default=default_dpi,
                         help='DPI value for image extraction. Higher can yield better results, but takes more space disk')
+    parser.add_argument('--tesseract_path', default=r'C:\Program Files\Tesseract-OCR\tesseract.exe',
+                        help='Path to tesseract.exe,')
 
     # Parse arguments
     args = parser.parse_args()
