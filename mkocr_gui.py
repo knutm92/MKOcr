@@ -1,7 +1,7 @@
 import sys
 import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QMessageBox, \
-    QApplication
+    QApplication, QSpacerItem, QSizePolicy
 from PyQt6.QtCore import pyqtSignal
 
 from mkocr import mk_ocr
@@ -27,14 +27,23 @@ class OCRGui(QWidget):
         self.run_button = QPushButton('Run OCR!')
         self.run_button.clicked.connect(self.run_ocr)
 
+        # Main Layout
+        main_layout = QVBoxLayout()
+
         # Add created items to the gui box
         input_layout = QHBoxLayout()
         input_layout.addWidget(self.input_label)
         input_layout.addWidget(self.input_path)
         input_layout.addWidget(self.input_browse)
-        input_layout.addWidget(self.run_button)
+        #spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        #input_layout.addItem(spacer)
+        main_layout.addLayout(input_layout)
 
-        self.setLayout(input_layout)
+        # Add run button below
+        main_layout.addWidget(self.run_button)
+
+
+        self.setLayout(main_layout)
         print(self.input_label.isVisible())
         print(self.input_path.isVisible())
         print(self.input_browse.isVisible())
