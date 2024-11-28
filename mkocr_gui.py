@@ -1,17 +1,21 @@
 import sys
 import os
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QMessageBox, \
-    QApplication, QSpacerItem, QSizePolicy
-from PyQt6.QtCore import pyqtSignal
+    QApplication
 
 from mkocr import mk_ocr
-import const
 
 
 class OCRGui(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
+
+        # Initialize the attributes
+        self.input_label = None
+        self.input_path = None
+        self.input_browse = None
+        self.run_button = None
 
     def init_ui(self):
         self.setWindowTitle('MKOcr Pipeline')
