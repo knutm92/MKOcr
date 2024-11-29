@@ -13,12 +13,6 @@ class OCRGui(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        '''
-        # Initialize the attributes
-        self.input_label = None
-        self.input_path = None
-        self.input_browse = None
-        self.run_button = None'''
 
     def init_ui(self):
         self.setWindowTitle('MKOcr Pipeline')
@@ -47,8 +41,6 @@ class OCRGui(QWidget):
         self.dpi_slider = QSlider(Qt.Orientation.Horizontal)
         self.dpi_slider.setRange(72, 900)
         self.dpi_slider.setValue(const.default_dpi)
-        # self.dpi_value = QLabel(f'dpi value: {self.dpi_slider.value()}')
-        # self.dpi_slider.valueChanged.connect(self.dpi_value)
         self.dpi_slider.valueChanged.connect(self.update_dpi)
 
         # Run OCR button
@@ -77,15 +69,10 @@ class OCRGui(QWidget):
         input_layout.addWidget(self.input_browse)
 
         # Construct dpi layout
-        # TODO: add a slider tag with the selected value
-        # TODO: pass selected dpi value to the pipeline
         dpi_layout = QHBoxLayout()
         dpi_layout.addWidget(self.dpi_label)
         dpi_layout.addWidget(self.dpi_slider)
-        # dpi_layout.addWidget(self.dpi_value)
 
-        # spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        # input_layout.addItem(spacer)
         # Construct main layout
         main_layout.addLayout(tesseract_layout)
         main_layout.addLayout(input_layout)

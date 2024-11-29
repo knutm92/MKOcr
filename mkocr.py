@@ -9,6 +9,7 @@ import const
 import PyQt6
 
 ##TODO: add error handling
+##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
 
