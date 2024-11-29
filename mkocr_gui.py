@@ -36,12 +36,13 @@ class OCRGui(QWidget):
         self.output_browse = QPushButton('Browse')
         self.output_browse.clicked.connect(self.browse_output)
         # DPI
-        self.dpi_label = QLabel('DPI:')
-        self.dpi_input = QSlider(Qt.Orientation.Horizontal)
-        self.dpi_input.setRange(72, 900)
-        self.dpi_input.setValue(const.default_dpi)
-        # self.dpi_value = QLabel(f'dpi value: {self.dpi_input.value()}')
-        # self.dpi_input.valueChanged.connect(self.dpi_value)
+        self.dpi_label = QLabel('DPI: 300')
+        self.dpi_slider = QSlider(Qt.Orientation.Horizontal)
+        self.dpi_slider.setRange(72, 900)
+        self.dpi_slider.setValue(const.default_dpi)
+        # self.dpi_value = QLabel(f'dpi value: {self.dpi_slider.value()}')
+        # self.dpi_slider.valueChanged.connect(self.dpi_value)
+        self.dpi_slider.valueChanged.connect(self.update_dpi)
 
         # Run OCR button
         self.run_button = QPushButton('Run OCR!')
@@ -67,7 +68,7 @@ class OCRGui(QWidget):
         # TODO: pass selected dpi value to the pipeline
         dpi_layout = QHBoxLayout()
         dpi_layout.addWidget(self.dpi_label)
-        dpi_layout.addWidget(self.dpi_input)
+        dpi_layout.addWidget(self.dpi_slider)
         # dpi_layout.addWidget(self.dpi_value)
 
         # spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
@@ -92,10 +93,15 @@ class OCRGui(QWidget):
         if dir_path:
             self.output_path.setText(dir_path)
 
+    def update_dpi(self):
+        dpi_value = self.dpi_slider.value()
+        self.dpi_label.setText(f"DPI: {dpi_value}")
+
+
     def run_ocr(self):
         input_path = self.input_path.text().strip()
         output_path = self.output_path.text().strip()
-        dpi = self.dpi_input.value()
+        dpi = self.dpi_slider.value()
 
         if not input_path or not os.path.isfile(input_path):
             QMessageBox.warning(self, "Input Error", "Invalid input PDF path.")
