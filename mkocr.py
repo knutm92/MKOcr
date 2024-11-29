@@ -35,6 +35,11 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
     # Set Tesseract engine path
     pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
+    # Create output filename
+    input_filename = os.path.basename(input_path)
+    filename_split = input_filename.rsplit('.',1)
+    output_filename =  f'{filename_split[0]}_ocr.{filename_split[1]}' if len(filename_split) > 1 else f'{filename}_ocr'
+
     # Open pdf
     pdf = pymupdf.open(input_path)
     print("pdf opened")
@@ -70,8 +75,8 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
         # Save to pdf
         page = pikepdf.Pdf.open(io.BytesIO(page_pdf))
         pdf_file.pages.extend(page.pages)
-    print(f"trying to save {output_path}/output.pdf")
-    pdf_file.save(output_path + '/output.pdf')  # Compact object stream
+    print(f"trying to save {output_path}/{output_filename}")
+    pdf_file.save(output_path + f'/{output_filename}')  # Compact object stream
 
 
 def main():
