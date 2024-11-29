@@ -70,7 +70,7 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
         # Save to pdf
         page = pikepdf.Pdf.open(io.BytesIO(page_pdf))
         pdf_file.pages.extend(page.pages)
-    print(f"trying to save {output_path}./output.pdf")
+    print(f"trying to save {output_path}/output.pdf")
     pdf_file.save(output_path + '/output.pdf')  # Compact object stream
 
 
