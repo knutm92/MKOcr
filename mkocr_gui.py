@@ -24,6 +24,13 @@ class OCRGui(QWidget):
         self.setWindowTitle('MKOcr Pipeline')
         self.setGeometry(100, 100, 400, 300)
 
+        # Tesseract path
+        self.tesseract_label = QLabel('Tesseract.exe path:')
+        self.tesseract_path = QLineEdit()
+        self.tesseract_path.setText(const.default_tesseract_path)
+        self.tesseract_browse = QPushButton('Browse')
+        self.tesseract_browse.clicked.connect(self.browse_input)
+
         # Input for pdf path
         self.input_label = QLabel('Input pdf path:')
         self.input_path = QLineEdit()
@@ -31,7 +38,7 @@ class OCRGui(QWidget):
         self.input_browse.clicked.connect(self.browse_input)
 
         # Output path
-        self.output_label = QLabel('Output path:')
+        self.output_label = QLabel('Output dir path:')
         self.output_path = QLineEdit()
         self.output_browse = QPushButton('Browse')
         self.output_browse.clicked.connect(self.browse_output)
@@ -50,6 +57,12 @@ class OCRGui(QWidget):
 
         # Main Layout
         main_layout = QVBoxLayout()
+
+        # Construct tesseract layout
+        tesseract_layout = QHBoxLayout()
+        tesseract_layout.addWidget(self.tesseract_label)
+        tesseract_layout.addWidget(self.tesseract_path)
+        tesseract_layout.addWidget(self.tesseract_browse)
 
         # Construct output layout
         output_layout = QHBoxLayout()
@@ -74,6 +87,7 @@ class OCRGui(QWidget):
         # spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         # input_layout.addItem(spacer)
         # Construct main layout
+        main_layout.addLayout(tesseract_layout)
         main_layout.addLayout(input_layout)
         main_layout.addLayout(output_layout)
         main_layout.addLayout(dpi_layout)
@@ -97,8 +111,8 @@ class OCRGui(QWidget):
         dpi_value = self.dpi_slider.value()
         self.dpi_label.setText(f"DPI: {dpi_value}")
 
-
     def run_ocr(self):
+        tesseract_path = self.tesseract_path.text().strip()
         input_path = self.input_path.text().strip()
         output_path = self.output_path.text().strip()
         dpi = self.dpi_slider.value()
@@ -108,7 +122,7 @@ class OCRGui(QWidget):
             return
 
         try:
-            mk_ocr(output_path=output_path, input_path=input_path, dpi=dpi)
+            mk_ocr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path)
             QMessageBox.information(self, "Success", "OCR completed successfully!")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {e}")
