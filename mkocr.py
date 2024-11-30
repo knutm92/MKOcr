@@ -6,10 +6,13 @@ import cv2
 import pikepdf
 import io
 import const
+import PyQt6
 
 ##TODO: add error handling
+##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
+##TODO: remove img after the ocr process
 
 
 pdf_name = 'synod_small'
@@ -30,11 +33,16 @@ def apply_threshold(image):
     return binary
 
 
-def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.pdf', language: str = 'eng',
+def mk_ocr(output_path: str, input_path: str, language: str = 'eng',
            dpi: int = const.default_dpi, tesseract_path: str = const.default_tesseract_path):
     # Set Tesseract engine path
     pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
+    # Create output filename
+    input_filename = os.path.basename(input_path)
+    filename_split = input_filename.rsplit('.', 1)
+    output_filename = f'{filename_split[0]}_ocr.{filename_split[1]}' if len(
+        filename_split) > 1 else f'{input_filename}_ocr'
     # Open pdf
     pdf = pymupdf.open(input_path)
     print("pdf opened")
@@ -61,17 +69,17 @@ def mk_ocr(output_path: str, input_path: str = './sample_data/input/synod_small.
 
         # Open the page image
         image = cv2.imread(image_path)
-        print("doing ocr")
+        print(f'Doing OCR of page {page.number}...', end='')
 
         # Perform OCR
         page_pdf = pytesseract.image_to_pdf_or_hocr(image, extension='pdf', lang=language, config='pdf')  # do OCR
-        print("ocr done")
+        print('Done')
 
         # Save to pdf
         page = pikepdf.Pdf.open(io.BytesIO(page_pdf))
         pdf_file.pages.extend(page.pages)
-    print(f"trying to save {output_path}./output.pdf")
-    pdf_file.save(output_path + '/output.pdf')  # Compact object stream
+    print(f'Saving {output_path}/{output_filename}')
+    pdf_file.save(output_path + f'/{output_filename}')  # Compact object stream
 
 
 def main():
@@ -79,7 +87,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='A simple OCR pipeline for converting pdfs to searchable pdfs using Tesseract OCR engine.')
     parser.add_argument('output_path', help='Path to the output file.')
-    parser.add_argument('--input_path', default='./sample_data/input/synod_small.pdf',
+    parser.add_argument('input_path',
                         help='Path to the input pdf file.')
     parser.add_argument('--language', default='eng', help='Language of the text.')
     parser.add_argument('--dpi', default=const.default_dpi,
