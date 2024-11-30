@@ -3,7 +3,7 @@ import os
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QMessageBox, \
-    QApplication, QSpinBox, QSlider
+    QApplication, QSlider, QComboBox
 
 import const
 from mkocr import mk_ocr
@@ -13,6 +13,7 @@ class OCRGui(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
+        self.lang_code = const.default_language_code
 
     def init_ui(self):
         self.setWindowTitle('MKOcr Pipeline')
@@ -36,6 +37,7 @@ class OCRGui(QWidget):
         self.output_path = QLineEdit()
         self.output_browse = QPushButton('Browse')
         self.output_browse.clicked.connect(self.browse_output)
+
         # DPI
         self.dpi_label = QLabel('DPI: 300')
         self.dpi_slider = QSlider(Qt.Orientation.Horizontal)
@@ -46,6 +48,13 @@ class OCRGui(QWidget):
         # Run OCR button
         self.run_button = QPushButton('Run OCR!')
         self.run_button.clicked.connect(self.run_ocr)
+
+        # Language drop-down list
+        self.language_dropdown = QComboBox()
+        self.language_label = QLabel('Select text language: ')
+        self.language_dropdown.addItems(const.tesseract_languages.keys())
+        self.language_dropdown.setCurrentText(const.default_language)
+        self.language_dropdown.currentTextChanged.connect(self.update_language)
 
         # Main Layout
         main_layout = QVBoxLayout()
@@ -73,11 +82,17 @@ class OCRGui(QWidget):
         dpi_layout.addWidget(self.dpi_label)
         dpi_layout.addWidget(self.dpi_slider)
 
+        # Construct language layout
+        language_layout = QHBoxLayout()
+        language_layout.addWidget(self.language_label)
+        language_layout.addWidget(self.language_dropdown)
+
         # Construct main layout
         main_layout.addLayout(tesseract_layout)
         main_layout.addLayout(input_layout)
         main_layout.addLayout(output_layout)
         main_layout.addLayout(dpi_layout)
+        main_layout.addLayout(language_layout)
 
         # Add run button below
         main_layout.addWidget(self.run_button)
@@ -98,18 +113,23 @@ class OCRGui(QWidget):
         dpi_value = self.dpi_slider.value()
         self.dpi_label.setText(f"DPI: {dpi_value}")
 
+    def update_language(self, selected_language):
+        self.lang_code = const.tesseract_languages[selected_language]
+
     def run_ocr(self):
         tesseract_path = self.tesseract_path.text().strip()
         input_path = self.input_path.text().strip()
         output_path = self.output_path.text().strip()
         dpi = self.dpi_slider.value()
+        language = self.lang_code
 
         if not input_path or not os.path.isfile(input_path):
             QMessageBox.warning(self, "Input Error", "Invalid input PDF path.")
             return
 
         try:
-            mk_ocr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path)
+            mk_ocr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path,
+                   language=language)
             QMessageBox.information(self, "Success", "OCR completed successfully!")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {e}")

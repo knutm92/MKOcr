@@ -12,6 +12,7 @@ import PyQt6
 ##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
+##TODO: remove img after the ocr process
 
 
 pdf_name = 'synod_small'
@@ -40,8 +41,8 @@ def mk_ocr(output_path: str, input_path: str, language: str = 'eng',
     # Create output filename
     input_filename = os.path.basename(input_path)
     filename_split = input_filename.rsplit('.', 1)
-    output_filename = f'{filename_split[0]}_ocr.{filename_split[1]}' if len(filename_split) > 1 else f'{input_filename}_ocr'
-
+    output_filename = f'{filename_split[0]}_ocr.{filename_split[1]}' if len(
+        filename_split) > 1 else f'{input_filename}_ocr'
     # Open pdf
     pdf = pymupdf.open(input_path)
     print("pdf opened")
@@ -68,16 +69,16 @@ def mk_ocr(output_path: str, input_path: str, language: str = 'eng',
 
         # Open the page image
         image = cv2.imread(image_path)
-        print("doing ocr")
+        print(f'Doing OCR of page {page.number}...', end='')
 
         # Perform OCR
         page_pdf = pytesseract.image_to_pdf_or_hocr(image, extension='pdf', lang=language, config='pdf')  # do OCR
-        print("ocr done")
+        print('Done')
 
         # Save to pdf
         page = pikepdf.Pdf.open(io.BytesIO(page_pdf))
         pdf_file.pages.extend(page.pages)
-    print(f"trying to save {output_path}/{output_filename}")
+    print(f'Saving {output_path}/{output_filename}')
     pdf_file.save(output_path + f'/{output_filename}')  # Compact object stream
 
 
