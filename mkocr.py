@@ -7,7 +7,9 @@ import pikepdf
 import io
 import const
 import PyQt6
-
+from argument_parser import parse_arguments
+from utils import create_dir
+from postprocessing import pdf_append
 ##TODO: add error handling
 ##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
@@ -89,44 +91,29 @@ class MkOcr:
             print(f'Doing OCR of page {page.number}...', end=' ')
 
             # Perform OCR
-            page_pdf = pytesseract.image_to_pdf_or_hocr(image, extension='pdf', lang=self.language,
+            processed_page = pytesseract.image_to_pdf_or_hocr(image, extension='pdf', lang=self.language,
                                                         config='pdf')  # do OCR
             print('Done')
 
-            # Save to pdf
-            page = pikepdf.Pdf.open(io.BytesIO(page_pdf))
-            pdf_file.pages.extend(page.pages)
+            # Append the current page to the searchable pdf
+            pdf_file = pdf_append(processed_page, pdf_file)
+
         print(f'Saving {self.output_path}/{output_filename}')
         pdf_file.save(self.output_path + f'/{output_filename}')  # Compact object stream
 
 
 def main():
-    # Specify CLI arguments
-    parser = argparse.ArgumentParser(
-        description='A simple OCR pipeline for converting pdfs to searchable pdfs using Tesseract OCR engine.')
-    parser.add_argument('input_path',
-                        help='Path to the input pdf file.')
-    parser.add_argument('output_path', help='Path to the output file.')
-    parser.add_argument('--tesseract_path', default=r'C:\Program Files\Tesseract-OCR\tesseract.exe',
-                        help='Path to tesseract.exe,')
-    parser.add_argument('--language', default='eng', help='Language of the text.')
-    parser.add_argument('--dpi', default=const.default_dpi,
-                        help='DPI value for image extraction. Higher can yield better results, but takes more space disk')
-
     # Parse arguments
-    args = parser.parse_args()
+    args = parse_arguments()
 
     # Create output dir if it does not exist
-    output_dir = os.path.dirname(args.output_path)
-    if output_dir and not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    create_dir(args.output_path)
 
     # Run mkocr pipeline
     processor = MkOcr(input_path=args.input_path, output_path=args.output_path, tesseract_path=args.tesseract_path,
                       language=args.language,
                       dpi=args.dpi)
     processor.mk_ocr()
-    # mk_ocr(args.output_path, args.input_path, args.language, args.dpi)
 
 
 if __name__ == "__main__":
