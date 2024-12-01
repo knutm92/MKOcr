@@ -1,18 +1,12 @@
-import pymupdf
-import pytesseract
-import argparse
-import os
 import cv2
-import pikepdf
-import io
-
-from processing import run_tesseract
+import pymupdf
 
 import const
-import PyQt6
 from argument_parser import parse_arguments
-from utils import create_dir
 from postprocessing import pdf_append
+from processing import run_tesseract
+from utils import create_dir, get_output_filename
+
 ##TODO: add error handling
 ##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
@@ -57,18 +51,15 @@ class MkOcr:
         self.dpi = dpi
 
     def mk_ocr(self):
+        output_filename = get_output_filename(path=self.input_path)
 
-
-        # Create output filename
-        input_filename = os.path.basename(self.input_path)
-        filename_split = input_filename.rsplit('.', 1)
-        output_filename = f'{filename_split[0]}_ocr.{filename_split[1]}' if len(
-            filename_split) > 1 else f'{input_filename}_ocr'
         # Open pdf
         pdf = pymupdf.open(self.input_path)
         print("pdf opened")
 
-        pdf_file = pikepdf.Pdf.new()
+        # Initialize pdf file
+        pdf_file = None
+
         # Convert pdf to searchable pdf
         for page in pdf:
             # Convert pdf page to img
@@ -90,7 +81,8 @@ class MkOcr:
 
             print(f'Doing OCR of page {page.number}...', end=' ')
             # Perform OCR
-            processed_page = run_tesseract(image_path= image_path, language= self.language, tesseract_path=self.tesseract_path)
+            processed_page = run_tesseract(image_path=image_path, language=self.language,
+                                           tesseract_path=self.tesseract_path)
             print('Done')
 
             # Append the current page to the searchable pdf
