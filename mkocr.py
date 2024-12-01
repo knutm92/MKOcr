@@ -5,6 +5,9 @@ import os
 import cv2
 import pikepdf
 import io
+
+from processing import run_tesseract
+
 import const
 import PyQt6
 from argument_parser import parse_arguments
@@ -54,8 +57,7 @@ class MkOcr:
         self.dpi = dpi
 
     def mk_ocr(self):
-        # Set Tesseract engine path
-        pytesseract.pytesseract.tesseract_cmd = self.tesseract_path
+
 
         # Create output filename
         input_filename = os.path.basename(self.input_path)
@@ -86,13 +88,9 @@ class MkOcr:
             cv2.imwrite(image_path_hq, page_image_hq)  # save img
             print(image_path_hq)
 
-            # Open the page image
-            image = cv2.imread(image_path)
             print(f'Doing OCR of page {page.number}...', end=' ')
-
             # Perform OCR
-            processed_page = pytesseract.image_to_pdf_or_hocr(image, extension='pdf', lang=self.language,
-                                                        config='pdf')  # do OCR
+            processed_page = run_tesseract(image_path= image_path, language= self.language, tesseract_path=self.tesseract_path)
             print('Done')
 
             # Append the current page to the searchable pdf
