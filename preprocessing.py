@@ -33,10 +33,7 @@ def pdf_to_img(dpi: int, pdf_name: str, output_path: str, page):
     image_path = f'{output_path}/{pdf_name}_page_{page.number}.png'
     image.save(image_path)  # save img
 
-    # Save morphed image for comparison
-    image_path_hq = f'{output_path}/{pdf_name}_page_{page.number}_hq.png'
-
-    # these are quality improvements:
+    # Remove noise from an image
     image_hq = remove_noise(cv2.imread(image_path))
 
     cv2.imwrite(image_path, image_hq)
