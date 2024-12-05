@@ -1,5 +1,3 @@
-import cv2
-
 import const
 from argument_parser import parse_arguments
 from postprocessing import pdf_append, remove_image
@@ -13,21 +11,6 @@ from utils import create_dir, get_output_filename, get_input_filename
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
 ##TODO: remove img after the ocr process
-
-
-# initialize OCR engine
-
-def remove_noise(image):
-    denoised = cv2.medianBlur(image, const.noise_kernel)  # Adjust kernel size as needed
-    return denoised
-
-
-def apply_threshold(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    binary = cv2.adaptiveThreshold(
-        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, const.threshold_block, const.threshold_c)
-
-    return binary
 
 
 class MkOcr:
