@@ -2,7 +2,7 @@ import cv2
 
 import const
 from argument_parser import parse_arguments
-from postprocessing import pdf_append
+from postprocessing import pdf_append, remove_image
 from preprocessing import open_pdf, pdf_to_img
 from processing import run_tesseract
 from utils import create_dir, get_output_filename, get_input_filename
@@ -71,7 +71,7 @@ class MkOcr:
             processed_page = run_tesseract(image_path=image_path, language=self.language,
                                            tesseract_path=self.tesseract_path)
             print('Done')
-
+            remove_image(image_path)
             # Append the current page to the searchable pdf
             pdf_file = pdf_append(processed_page, pdf_file)
 
