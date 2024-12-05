@@ -70,7 +70,7 @@ def main():
     # Create output dir if it does not exist
     create_dir(args.output_path)
 
-    # Run mkocr pipeline
+    # Run the pipeline
     processor = MkOcr(input_path=args.input_path, output_path=args.output_path, tesseract_path=args.tesseract_path,
                       language=args.language,
                       dpi=args.dpi)
