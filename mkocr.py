@@ -1,9 +1,9 @@
 import cv2
-import pymupdf
 
 import const
 from argument_parser import parse_arguments
 from postprocessing import pdf_append
+from preprocessing import open_pdf, pdf_to_img
 from processing import run_tesseract
 from utils import create_dir, get_output_filename
 
@@ -54,30 +54,19 @@ class MkOcr:
         output_filename = get_output_filename(path=self.input_path)
 
         # Open pdf
-        pdf = pymupdf.open(self.input_path)
-        print("pdf opened")
+        try:
+            pdf = open_pdf(self.input_path)
+        except RuntimeError as error:
+            print(error)
+            print('OCR processing terminated')
 
-        # Initialize pdf file
+        # Initialize output pdf file
         pdf_file = None
 
         # Convert pdf to searchable pdf
         for page in pdf:
             # Convert pdf page to img
-            page_image = page.get_pixmap(dpi=self.dpi)
-
-            # Save img to a file
-            image_path = f'{self.output_path}{pdf_name}_page_{page.number}.png'
-            page_image.save(image_path)  # save img
-            print(image_path)
-
-            # Save morphed image for comparison
-            image_path_hq = f'{self.output_path}{pdf_name}_page_{page.number}_hq.png'
-
-            # these are quality improvements:
-            page_image_hq = apply_threshold(cv2.imread(image_path))
-
-            cv2.imwrite(image_path_hq, page_image_hq)  # save img
-            print(image_path_hq)
+            image_path = pdf_to_img(dpi=self.dpi, pdf_name=pdf_name, output_path=self.output_path, page=page)
 
             print(f'Doing OCR of page {page.number}...', end=' ')
             # Perform OCR
