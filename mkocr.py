@@ -6,13 +6,6 @@ from processing import run_tesseract
 from utils import create_dir, get_output_filename, get_input_filename
 
 
-##TODO: add error handling
-##TODO: improve prints (ocr of page 1... done)
-##TODO: refactor into modules
-##TODO: add some cool """ description
-##TODO: remove img after the ocr process
-
-
 class MkOcr:
     """
     Handles pdf to image conversion, preprocessing, image ocr and saves the result as a searchable pdf.
