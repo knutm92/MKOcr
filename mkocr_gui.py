@@ -129,7 +129,7 @@ class OCRGui(QWidget):
         try:
             processor = MkOcr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path,
                    language=language)
-            processor.mk_ocr()
+            processor.do_ocr()
             QMessageBox.information(self, "Success", "OCR completed successfully!")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {e}")

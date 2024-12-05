@@ -31,7 +31,7 @@ class MkOcr:
         self.language = language
         self.dpi = dpi
 
-    def mk_ocr(self):
+    def do_ocr(self):
         pdf_name = get_input_filename(path=self.input_path)
         output_filename = get_output_filename(path=self.input_path)
         # Open pdf
@@ -73,7 +73,7 @@ def main():
     processor = MkOcr(input_path=args.input_path, output_path=args.output_path, tesseract_path=args.tesseract_path,
                       language=args.language,
                       dpi=args.dpi)
-    processor.mk_ocr()
+    processor.do_ocr()
 
 
 if __name__ == "__main__":
