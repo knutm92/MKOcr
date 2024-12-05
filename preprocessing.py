@@ -30,12 +30,12 @@ def pdf_to_img(dpi: int, pdf_name: str, output_path: str, page):
     page_image = page.get_pixmap(dpi=dpi)
 
     # Save img to a file
-    image_path = f'{output_path}{pdf_name}_page_{page.number}.png'
+    image_path = f'{output_path}/{pdf_name}_page_{page.number}.png'
     page_image.save(image_path)  # save img
     print(image_path)
 
     # Save morphed image for comparison
-    image_path_hq = f'{output_path}{pdf_name}_page_{page.number}_hq.png'
+    image_path_hq = f'{output_path}/{pdf_name}_page_{page.number}_hq.png'
 
     # these are quality improvements:
     page_image_hq = apply_threshold(cv2.imread(image_path))

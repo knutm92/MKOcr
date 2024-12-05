@@ -5,16 +5,14 @@ from argument_parser import parse_arguments
 from postprocessing import pdf_append
 from preprocessing import open_pdf, pdf_to_img
 from processing import run_tesseract
-from utils import create_dir, get_output_filename
+from utils import create_dir, get_output_filename, get_input_filename
+
 
 ##TODO: add error handling
 ##TODO: improve prints (ocr of page 1... done)
 ##TODO: refactor into modules
 ##TODO: add some cool """ description
 ##TODO: remove img after the ocr process
-
-
-pdf_name = 'synod_small'
 
 
 # initialize OCR engine
@@ -51,8 +49,8 @@ class MkOcr:
         self.dpi = dpi
 
     def mk_ocr(self):
+        pdf_name = get_input_filename(path=self.input_path)
         output_filename = get_output_filename(path=self.input_path)
-
         # Open pdf
         try:
             pdf = open_pdf(self.input_path)
