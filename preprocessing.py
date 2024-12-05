@@ -9,7 +9,7 @@ def open_pdf(pdf_path: str):
         pdf = pymupdf.open(pdf_path)
         return pdf
     except Exception as e:
-        raise RuntimeError('Failed to open pdf file.')
+        raise RuntimeError(f'Failed to open pdf file: {e}')
 
 
 def remove_noise(image):
