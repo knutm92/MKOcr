@@ -59,7 +59,7 @@ class MkOcr:
             print('OCR processing terminated')
 
         # Initialize output pdf file
-        pdf_file = None
+        output_pdf = None
 
         # Convert pdf to searchable pdf
         for page in pdf:
@@ -73,10 +73,10 @@ class MkOcr:
             print('Done')
             remove_image(image_path)
             # Append the current page to the searchable pdf
-            pdf_file = pdf_append(processed_page, pdf_file)
+            output_pdf = pdf_append(processed_page, output_pdf)
 
         print(f'Saving {self.output_path}/{output_filename}')
-        pdf_file.save(self.output_path + f'/{output_filename}')  # Compact object stream
+        output_pdf.save(self.output_path + f'/{output_filename}')  # Compact object stream
 
 
 def main():
