@@ -40,6 +40,7 @@ class MkOcr:
         except RuntimeError as error:
             print(error)
             print('OCR processing terminated')
+            exit()
 
         # Initialize output pdf file
         output_pdf = None
