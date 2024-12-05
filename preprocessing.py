@@ -27,18 +27,17 @@ def apply_threshold(image):
 
 def pdf_to_img(dpi: int, pdf_name: str, output_path: str, page):
     # Convert pdf page to img
-    page_image = page.get_pixmap(dpi=dpi)
+    image = page.get_pixmap(dpi=dpi)
 
     # Save img to a file
     image_path = f'{output_path}/{pdf_name}_page_{page.number}.png'
-    page_image.save(image_path)  # save img
-    print(image_path)
+    image.save(image_path)  # save img
 
     # Save morphed image for comparison
     image_path_hq = f'{output_path}/{pdf_name}_page_{page.number}_hq.png'
 
     # these are quality improvements:
-    page_image_hq = apply_threshold(cv2.imread(image_path))
+    image_hq = remove_noise(cv2.imread(image_path))
 
-    cv2.imwrite(image_path_hq, page_image_hq)
+    cv2.imwrite(image_path, image_hq)
     return image_path
