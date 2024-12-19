@@ -6,8 +6,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton
     QApplication, QSlider, QComboBox
 
 import const
-from mkocr import mk_ocr
-
+from mkocr import MkOcr
 
 class OCRGui(QWidget):
     def __init__(self):
@@ -128,8 +127,9 @@ class OCRGui(QWidget):
             return
 
         try:
-            mk_ocr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path,
+            processor = MkOcr(output_path=output_path, input_path=input_path, dpi=dpi, tesseract_path=tesseract_path,
                    language=language)
+            processor.do_ocr()
             QMessageBox.information(self, "Success", "OCR completed successfully!")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {e}")
